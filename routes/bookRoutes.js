@@ -1,5 +1,15 @@
-const axios = require("axios");
 const router = require("express").Router();
+const booksController = require("../controllers/booksController");
+
+// Matches with "/api/bookmarks"
+router.route("/bookmarks/")
+  .get(booksController.findAll)
+  .post(booksController.create);
+
+// Matches with "/api/bookmarks/:id"
+router
+  .route("/bookmarks/:id")
+  .delete(booksController.remove);
 
 router.get("books/:query", (req, res) => {
   let query = `https://www.googleapis.com/books/v1/volumes?q=${req.params.query}&key=AIzaSyBy15gQ5M1367vhletYHK8RC1EX9IM8Vu0`
