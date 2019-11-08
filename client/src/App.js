@@ -25,39 +25,39 @@ class App extends Component {
   handleFormSubmit = event => {
     // When the form is submitted, prevent its default behavior, get recipes update the recipes state
     event.preventDefault();
-    API.getRecipes(this.state.bookSearch)
+    API.getBooks(this.state.bookSearch)
       .then(res => {
-        console.log(res.data);
-        this.setState({  books: res.data });
+        this.setState({ books: res.data.items });
       })
       .catch(err => console.log(err));
   };
 
   renderBookList = () => {
+    console.log(this.state.books)
     if (this.state.books.length < 1) {
-      return <h1>No books found</h1>
+      return <h1></h1>
     } else {
       return (
-        <BookList>
-          {
-            this.state.books.map((book, i) => {
-              return (
-                <BookListItem key={i}
-                  url={book.href}
-                  ingredients={book.ingredients}
-                  thumbnail={book.thumbnail}
-                  title={book.title}>
-                </BookListItem>
-              )
-            })
-          }
-        </BookList>
+        <div>
+          <BookList>
+            {this.state.books.map((book, i) => {
+                return (
+                  <BookListItem key={i}
+                    url={book.volumeInfo.previewLink}
+                    summary={book.volumeInfo.description}
+                    thumbnail={book.volumeInfo.imageLinks.thumbnail}
+                    title={book.volumeInfo.title}>
+                  </BookListItem>
+                )
+              })
+            }
+          </BookList>
+        </div>
       )
     }
   }
 
   render() {
-    console.log(this.state.book)
     return (
       <div>
         <Nav />

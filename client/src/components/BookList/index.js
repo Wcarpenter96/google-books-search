@@ -3,7 +3,7 @@ import Thumbnail from "../Thumbnail";
 import { Container, Row, Col } from "../Grid";
 
 export function BookList ({ children }) {
-  return <ul className="list-group">{children}</ul>;
+  return <ul className="list-group mt-5">{children}</ul>;
 }
 
 export function BookListItem (props) {
@@ -17,7 +17,7 @@ export function BookListItem (props) {
           <Col size="xs-8 sm-9">
             <h3>{props.title}</h3>
             <p>
-              Summary: "{props.ingredients}"
+              {props.summary}
             </p>
             <a
               rel="noreferrer noopener"
