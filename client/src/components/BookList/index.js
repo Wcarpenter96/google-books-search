@@ -31,7 +31,7 @@ export function BookListItem(props) {
           </Col>
           <Col size="xs-4 sm-2">
             <Button
-              // onClick={this.handleFormSubmit}
+              onClick={() => {props.handleBookmark(props.title,props.author,props.summary,props.url)}}
               type="light"
               className="input-lg mt-2">
               Bookmark this!

@@ -31,6 +31,18 @@ class Home extends Component {
       .catch(err => console.log(err));
   };
 
+  handleBookmark = (title, author, description, cover) => {
+    API.saveBookmark({
+      title: title,
+      author: author,
+      description: description,
+      cover: cover
+    }).then(res => {
+      console.log('Bookmarked!')
+    })
+      .catch(err => console.log(err));
+  }
+
   renderBookList = () => {
     console.log(this.state.books)
     if (this.state.books.length < 1) {
@@ -49,7 +61,7 @@ class Home extends Component {
               console.log(book.volumeInfo.authors)
               if (book.volumeInfo.authors) {
                 author = book.volumeInfo.authors[0]
-              }else {
+              } else {
                 author = '';
               }
               return (
@@ -58,7 +70,8 @@ class Home extends Component {
                   summary={book.volumeInfo.description}
                   thumbnail={thumbnail}
                   title={book.volumeInfo.title}
-                  author={author}>
+                  author={author}
+                  handleBookmark={this.handleBookmark}>
                 </BookListItem>
               )
             })
@@ -72,7 +85,7 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <Jumbotron header='Google Book Search'/>
+        <Jumbotron header='Google Book Search' />
         <Container>
           <Row>
             <Col size="md-12">
