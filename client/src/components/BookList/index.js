@@ -8,6 +8,28 @@ export function BookList({ children }) {
 }
 
 export function BookListItem(props) {
+  // console.log(props.title)
+  let bookmarkButton
+  if (!props.bookmarked) {
+    bookmarkButton = <Button
+      onClick={() => {
+        props.addBookmark(props.title,
+          props.author, props.summary, props.thumbnail, props.url, props.id)
+      }}
+      type="light"
+      className="input-lg mt-2">
+      Bookmark this!
+    </Button>
+  } else {
+    bookmarkButton = <Button
+      onClick={() => {
+        props.removeBookmark(props.id)
+      }}
+      type="danger"
+      className="input-lg mt-2">
+      Remove Bookmark
+  </Button>
+  }
   return (
     <li className="list-group-item">
       <Container>
@@ -30,12 +52,7 @@ export function BookListItem(props) {
             </a>
           </Col>
           <Col size="xs-4 sm-2">
-            <Button
-              onClick={() => {props.handleBookmark(props.title,props.author,props.summary,props.url)}}
-              type="light"
-              className="input-lg mt-2">
-              Bookmark this!
-              </Button>
+            {bookmarkButton}
           </Col>
         </Row>
       </Container>

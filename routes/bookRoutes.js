@@ -8,8 +8,8 @@ router.route("/bookmarks/")
   .post(booksController.create);
 
 // Matches with "/api/bookmarks/:id"
-router
-  .route("/bookmarks/:id")
+router.route("/bookmarks/:id")
+  .get(booksController.find)
   .delete(booksController.remove);
 
 router.get("/books/:query", (req, res) => {

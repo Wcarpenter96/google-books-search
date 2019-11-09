@@ -9,8 +9,23 @@ import { Container, Row, Col } from "./../../components/Grid";
 class Home extends Component {
   state = {
     books: [],
-    bookSearch: ""
+    bookSearch: "",
+    bookmarks: []
   };
+
+  componentDidMount() {
+    this.getBookmarks();
+  }
+
+  getBookmarks = () => {
+    API.getBookmarks()
+      .then(res => {
+        this.setState({
+          bookmarks: res.data
+        })
+      })
+      .catch(err => console.log(err));
+  }
 
   handleInputChange = event => {
     // Destructure the name and value properties off of event.target
@@ -31,34 +46,26 @@ class Home extends Component {
       .catch(err => console.log(err));
   };
 
-  handleBookmark = (title, author, description, cover) => {
-    API.saveBookmark({
-      title: title,
-      author: author,
-      description: description,
-      cover: cover
-    }).then(res => {
-      console.log('Bookmarked!')
-    })
-      .catch(err => console.log(err));
-  }
-
-  renderBookList = () => {
-    console.log(this.state.books)
+  renderBooks = () => {
     if (this.state.books.length < 1) {
-      return <div></div>
+      return <h1></h1>
     } else {
       return (
-        <div>
-          <BookList>
-            {this.state.books.map((book, i) => {
-              let thumbnail, author;
+        <BookList>
+          {
+            this.state.books.map((book, i) => {
+              let bookmarked, thumbnail, author;
+              bookmarked = false;
+              for (let j = 0; j < this.state.bookmarks.length; j++) {
+                if (this.state.bookmarks[j].id === book.id) {
+                  bookmarked = true;
+                }
+              }
               if (book.volumeInfo.imageLinks) {
                 thumbnail = book.volumeInfo.imageLinks.thumbnail;
               } else {
                 thumbnail = 'http://www.4motiondarlington.org/wp-content/uploads/2013/06/No-image-found.jpg'
               }
-              console.log(book.volumeInfo.authors)
               if (book.volumeInfo.authors) {
                 author = book.volumeInfo.authors[0]
               } else {
@@ -66,20 +73,48 @@ class Home extends Component {
               }
               return (
                 <BookListItem key={i}
+                  bookmarked={bookmarked}
                   url={book.volumeInfo.previewLink}
                   summary={book.volumeInfo.description}
                   thumbnail={thumbnail}
                   title={book.volumeInfo.title}
                   author={author}
-                  handleBookmark={this.handleBookmark}>
+                  id={book.id}
+                  addBookmark={this.addBookmark}
+                  removeBookmark={this.removeBookmark}>
                 </BookListItem>
               )
             })
-            }
-          </BookList>
-        </div>
+          }
+        </BookList>
       )
     }
+  }
+
+
+
+  addBookmark = (title, author, description, cover, url, id) => {
+    API.saveBookmark({
+      title: title,
+      author: author,
+      description: description,
+      cover: cover,
+      url: url,
+      id: id
+    }).then(res => {
+      console.log('Bookmarked!')
+      this.getBookmarks();
+    })
+      .catch(err => console.log(err));
+  }
+
+  removeBookmark = (id) => {
+    API.deleteBookmark(id)
+      .then(res => {
+        console.log(id + ' removed')
+        this.getBookmarks();
+      })
+      .catch(err => console.log(err));
   }
 
   render() {
@@ -116,7 +151,7 @@ class Home extends Component {
           </Row>
           <Row>
             <Col size="xs-12">
-              {this.renderBookList()}
+              {this.renderBooks()}
             </Col>
           </Row>
         </Container>
@@ -124,5 +159,6 @@ class Home extends Component {
     );
   }
 }
+
 
 export default Home;

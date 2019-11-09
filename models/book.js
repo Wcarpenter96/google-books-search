@@ -6,6 +6,8 @@ const bookSchema = new Schema({
   author: String,
   description: String,
   cover: String,
+  url: String,
+  id: String
 });
 
 const Book = mongoose.model("Book", bookSchema);
